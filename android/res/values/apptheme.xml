@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+
+        <!--when changing the background color here, change it also in splash.xml-->
+        <item name="android:colorBackground">#f5d327</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+</resources>

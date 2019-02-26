@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>source/qml/main.qml</file>
+        <file>source/qml/basiccomponents/MaterialButton.qml</file>
+        <file>source/qml/basiccomponents/MaterialIcon.qml</file>
+        <file>source/qml/effects/RippleEffect.qml</file>
+        <file>source/fonts/fontawesome-webfont.ttf</file>
+        <file>source/fonts/material-design-icons.ttf</file>
+        <file>source/qml/basiccomponents/LoadingIndicator.qml</file>
+        <file>source/qml/basiccomponents/ProgressLoadingBar.qml</file>
+        <file>source/qml/basiccomponents/Toast.qml</file>
+        <file>source/qml/basiccomponents/MaterialDialog.qml</file>
+        <file>source/qml/basiccomponents/BasicTextField.qml</file>
+        <file>source/qml/basiccomponents/RoundedButton.qml</file>
+        <file>source/qml/basiccomponents/CloseButtonMenuBar.qml</file>
+        <file>source/qml/screens/BlankScreen.qml</file>
+        <file>source/qml/basiccomponents/PulsatingLogo.qml</file>
+        <file>source/qml/items/BlankItem.qml</file>
+        <file>source/qml/screens/SetupScreen.qml</file>
+        <file>source/qml/screens/DownloadScreen.qml</file>
+        <file>source/fonts/Elianto-Regular.ttf</file>
+    </qresource>
+</RCC>

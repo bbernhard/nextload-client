@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:opacity="opaque">
+    <item>
+        <shape android:shape="rectangle" >
+            <!--when changing the background color here, change it also in apptheme.xml-->
+            <solid android:color="#f5d327"/>
+        </shape>
+    </item>
+    <item>
+         <bitmap android:src="@drawable/logo"
+        android:gravity="center" />
+    </item>
+</layer-list>
