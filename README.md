@@ -4,7 +4,7 @@ The mobile client allows you to easily add youtube videos for conversion.
 
 # Usage
 
-* Link the App to your nextcloud instance. Use the token as described in the [nextload-core](https://github.com/bbernhard/nextload-core) documentation.
+* Link the App to your nextcloud instance with the generated token. (see [nextload-core](https://github.com/bbernhard/nextload-core) for details).
 <img src="https://raw.githubusercontent.com/bbernhard/nextload-client/master/images/connect.png" width="500">
 
 
