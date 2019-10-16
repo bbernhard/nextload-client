@@ -6,6 +6,7 @@ import "../basiccomponents"
 
 BlankScreen {
     id: setupScreen
+    property string selectedBackend: "";
     signal connectSuccessful();
 
     HttpsRequestWorkerThread {
@@ -15,11 +16,19 @@ BlankScreen {
         onTestConnection: {
             loadingIndicator.visible = true;
             ConnectionSettings.setBaseUrl(url);
-            var testConnectionRequest = Qt.createQmlObject('import com.nextloadclient.nextloadclient 1.0; ListFolderContentsRequest{}',
+            var testConnectionRequest;
+            if(setupScreen.selectedBackend === "nextload-core") {
+                testConnectionRequest = Qt.createQmlObject('import com.nextloadclient.nextloadclient 1.0; ListFolderContentsRequest{}',
                                                               restAPI);
-            testConnectionRequest.setFolderName("");
-            testConnectionRequest.setToken(token);
-            restAPI.get(testConnectionRequest);
+                testConnectionRequest.setFolderName("");
+                testConnectionRequest.setToken(token);
+                restAPI.get(testConnectionRequest);
+            } else if(setupScreen.selectedBackend === "ocDownloader") {
+                testConnectionRequest = Qt.createQmlObject('import com.nextloadclient.nextloadclient 1.0; OcDownloaderVersionRequest{}',
+                                                           restAPI);
+                testConnectionRequest.setToken(token);
+                restAPI.post(testConnectionRequest);
+            }
         }
     }
 
@@ -27,10 +36,32 @@ BlankScreen {
         target: restAPI
         onResultReady: {
             if(errorCode === 0) {
-                settings.token = nextcloudToken.text;
-                settingsStorage.url = nextcloudUrl.text;
-                loadingIndicator.visible = false;
-                setupScreen.connectSuccessful();
+                var testConnectionSuccessful = false;
+                if(setupScreen.selectedBackend === "nextload-core")
+                    testConnectionSuccessful = true;
+                else if(setupScreen.selectedBackend === "ocDownloader") {
+                    if(result === "") {
+                        toast.show(qsTr("Couldn't connect, please make sure ocDownloader is installed and enabled!"));
+                        loadingIndicator.visible = false;
+                    } else {
+                        var jsonRes = JSON.parse(result);
+                        if ("RESULT" in jsonRes && jsonRes["RESULT"]) {
+                            testConnectionSuccessful = true;
+                        }
+                        else {
+                            toast.show(qsTr("Couldn't connect, please make sure ocDownloader is installed and enabled!"));
+                            loadingIndicator.visible = false;
+                        }
+                    }
+                }
+
+                if(testConnectionSuccessful) {
+                    settings.token = nextcloudToken.text;
+                    settingsStorage.backend = setupScreen.selectedBackend;
+                    settingsStorage.url = nextcloudUrl.text;
+                    loadingIndicator.visible = false;
+                    setupScreen.connectSuccessful();
+                }
             } else {
                 toast.show(qsTr("Couldn't connect, please check URL and token"));
             }
@@ -62,9 +93,28 @@ BlankScreen {
         }
     }
 
+    Text {
+        id: selectedBackendStaticText
+        text: qsTr("Backend")
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: header.bottom
+        anchors.topMargin: 20 * settings.pixelDensity
+        font.pixelSize: 4 * settings.pixelDensity
+        color: "white"
+    }
+
+    Text {
+        id: selectedBackend
+        text: setupScreen.selectedBackend
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.top: selectedBackendStaticText.bottom
+        font.pixelSize: 7 * settings.pixelDensity
+        color: "white"
+    }
+
     TextField {
         id: nextcloudUrl
-        anchors.top: header.bottom
+        anchors.top: selectedBackend.bottom
         anchors.topMargin: parent.width/3
         anchors.horizontalCenter: parent.horizontalCenter
         width: parent.width - 10 * settings.pixelDensity

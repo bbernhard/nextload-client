@@ -15,20 +15,32 @@ BlankScreen {
 
     HttpsRequestWorkerThread {
         id: restAPI
-        signal uploadTask(string url);
+        signal addDownloadTask(string url);
         signal nextloadFolderExists();
 
-        onUploadTask: {
+        onAddDownloadTask: {
             ConnectionSettings.setBaseUrl(settings.url);
             loadingIndicator.visible = true;
-            internal.currentRequest = "upload";
-            var uploadTaskRequest = Qt.createQmlObject('import com.nextloadclient.nextloadclient 1.0; UploadRequest{}',
-                                                              restAPI);
-            var entry = "url: " + url + "\n" + "format: " + checkboxes.checkedButton.text;
-            var filename = new Date().getTime() + ".yml";
-            uploadTaskRequest.set(entry, filename);
-            uploadTaskRequest.setToken(settings.token);
-            restAPI.put(uploadTaskRequest);
+
+            var addDownloadTaskRequest;
+            if(settings.backend === "nextload-core") {
+                internal.currentRequest = "upload";
+                addDownloadTaskRequest = Qt.createQmlObject('import com.nextloadclient.nextloadclient 1.0; UploadRequest{}',
+                                                                  restAPI);
+                var entry = "url: " + url + "\n" + "format: " + checkboxes.checkedButton.text;
+                var filename = new Date().getTime() + ".yml";
+                addDownloadTaskRequest.set(entry, filename);
+                addDownloadTaskRequest.setToken(settings.token);
+                restAPI.put(addDownloadTaskRequest);
+            } else if(settings.backend === "ocDownloader") {
+                addDownloadTaskRequest = Qt.createQmlObject('import com.nextloadclient.nextloadclient 1.0; OcDownloaderAddRequest{}',
+                                                                  restAPI);
+                addDownloadTaskRequest.setDownloadUrl(url);
+                addDownloadTaskRequest.setToken(settings.token);
+                restAPI.post(addDownloadTaskRequest);
+            } else {
+                console.log("invalid backend")
+            }
         }
 
         onNextloadFolderExists: {
@@ -46,22 +58,37 @@ BlankScreen {
     Connections {
         target: restAPI
         onResultReady: {
-            if(internal.currentRequest === "upload") {
-                if(errorCode === 0) {
+            if(settings.backend === "nextload-core") {
+                if(internal.currentRequest === "upload") {
+                    if(errorCode === 0) {
+                        loadingIndicator.visible = false;
+                        toast.show(qsTr("Success"));
+                    } else { //couldn't upload task. Check whether folder exists
+                        restAPI.nextloadFolderExists();
+                    }
+                } else if(internal.currentRequest == "checkfolder") { //upload request wasn't successful, so we now check
+                    //if the nextload folder exists. If it doesn't exist, the server application is probably not running
+                    //(or someone accidentally deleted the folder)
                     loadingIndicator.visible = false;
-                    toast.show(qsTr("Success"));
-                } else { //couldn't upload task. Check whether folder exists
-                    restAPI.nextloadFolderExists();
+                    if(errorCode === 0) {
+                        toast.show(qsTr("Couldn't process request - unknown error"));
+                    } else {
+                        toast.show(qsTr("Couldn't find nextload folder."));
+                    }
                 }
-            } else if(internal.currentRequest == "checkfolder") { //upload request wasn't successful, so we now check
-                //if the nextload folder exists. If it doesn't exist, the server application is probably not running
-                //(or someone accidentally deleted the folder)
+            } else if(settings.backend === "ocDownloader") {
+                var jsonRes = JSON.parse(result);
                 loadingIndicator.visible = false;
                 if(errorCode === 0) {
-                    toast.show(qsTr("Couldn't process request - unknown error"));
+                    if(jsonRes["ERROR"])
+                        toast.show(qsTr("Error") + ":" + jsonRes["MESSAGE"]);
+                    else
+                        toast.show(qsTr("Success"));
                 } else {
-                    toast.show(qsTr("Couldn't find nextload folder."));
+                    toast.show(qsTr("Unknown error"))
                 }
+            } else {
+                console.log("invalid backend")
             }
         }
     }
@@ -182,6 +209,8 @@ BlankScreen {
             onClicked: {
                 settings.token = "";
                 settingsStorage.url = "";
+                settings.backend = "";
+                stackView.replace(Qt.resolvedUrl("qrc:/source/qml/screens/SelectBackendScreen.qml"));
             }
         }
     }
@@ -200,7 +229,7 @@ BlankScreen {
         height: 20 * settings.pixelDensity
         text: qsTr("GO")
         onClicked: {
-            restAPI.uploadTask(downloadUrl.text);
+            restAPI.addDownloadTask(downloadUrl.text);
         }
     }
 

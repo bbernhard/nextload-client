@@ -56,6 +56,10 @@ int main(int argc, char *argv[])
     qmlRegisterType<UploadRequest>(g_uri.toStdString().c_str(), 1, 0, "UploadRequest");
     qmlRegisterType<ListFolderContentsRequest>(g_uri.toStdString().c_str(), 1, 0, "ListFolderContentsRequest");
 
+    //ocDownloader
+    qmlRegisterType<OcDownloaderVersionRequest>(g_uri.toStdString().c_str(), 1, 0, "OcDownloaderVersionRequest");
+    qmlRegisterType<OcDownloaderAddRequest>(g_uri.toStdString().c_str(), 1, 0, "OcDownloaderAddRequest");
+
     //register the different implementations, depending on the platform
 #ifdef Q_OS_IOS
     qmlRegisterType<ios::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
@@ -65,6 +69,9 @@ int main(int argc, char *argv[])
 #endif
 #ifdef Q_OS_WIN
     qmlRegisterType<windows::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
+#endif
+#ifdef Q_OS_LINUX
+    qmlRegisterType<linux1::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
 #endif
 #ifdef Q_OS_ANDROID
     qmlRegisterType<android::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");

@@ -8,6 +8,7 @@ import com.nextloadclient.nextloadclient 1.0
 import "screens"
 
 ApplicationWindow {
+    id: main
     visible: true
     width: 640
     height: 800
@@ -15,9 +16,8 @@ ApplicationWindow {
 
     Component.onCompleted: {
         settings.pixelDensity = Screen.logicalPixelDensity //set pixel density
-        if((settings.token === "") || (settings.url === "")) {
-            stackView.replace(Qt.resolvedUrl("qrc:/source/qml/screens/SetupScreen.qml"));
-            stackView.currentItem.connectSuccessful.connect(onSuccessfulConnect);
+        if((settings.token === "") || (settings.url === "") || (settings.backend === "")) {
+            stackView.replace(Qt.resolvedUrl("qrc:/source/qml/screens/SelectBackendScreen.qml"));
         } else {
             stackView.replace(Qt.resolvedUrl("qrc:/source/qml/screens/DownloadScreen.qml"));
         }
@@ -32,6 +32,7 @@ ApplicationWindow {
         property double pixelDensity
         property string token: keyChain.getToken()
         property string url: settingsStorage.url;
+        property string backend: settingsStorage.backend;
         onTokenChanged: keyChain.setToken(settings.token);
     }
 
@@ -45,6 +46,7 @@ ApplicationWindow {
         id: settingsStorage
         category: "General"
         property string url;
+        property string backend;
     }
 
     StackView {

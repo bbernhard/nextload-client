@@ -7,6 +7,8 @@
 #include "misc/imageprocessor.h"
 #include "rest/requests/upload.h"
 #include "rest/requests/listfoldercontentsrequest.h"
+#include "rest/requests/ocdownloaderversionrequest.h"
+#include "rest/requests/ocdownloaderaddrequest.h"
 #include "misc/base64imageprovider.h"
 
 #ifdef Q_OS_IOS
@@ -15,6 +17,10 @@
 
 #ifdef Q_OS_WIN32
 #include "misc/windows/keychain.h"
+#endif
+
+#ifdef Q_OS_LINUX
+#include "misc/linux/keychain.h"
 #endif
 
 #ifdef Q_OS_OSX

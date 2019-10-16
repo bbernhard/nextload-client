@@ -1,5 +1,5 @@
-#ifndef WINDOWSKEYCHAIN_H
-#define WINDOWSKEYCHAIN_H
+#ifndef LINUXKEYCHAIN_H
+#define LINUXKEYCHAIN_H
 
 #include <QString>
 #include <QImage>
@@ -7,7 +7,7 @@
 #include <QSettings>
 #include "../keychaininterface.h"
 
-namespace windows {
+namespace linux1 {
     class KeyChain : public KeyChainInterface{
         Q_OBJECT
     public:
@@ -26,4 +26,4 @@ namespace windows {
 }
 
 
-#endif // WINDOWSKEYCHAIN_H
+#endif // LINUXKEYCHAIN_H
