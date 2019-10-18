@@ -22,6 +22,8 @@ CONFIG += qtquickcompiler
 SOURCES += \
     source/cpp/main.cpp \
     source/cpp/rest/httpsrequestworker.cpp \
+    source/cpp/rest/requests/ocdownloaderaddrequest.cpp \
+    source/cpp/rest/requests/ocdownloaderversionrequest.cpp \
     source/cpp/rest/settings.cpp \
     source/cpp/misc/uid.cpp \
     source/cpp/rest/requests/sslrequest.cpp \
@@ -57,6 +59,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     source/cpp/rest/httpsrequestworker.h \
+    source/cpp/rest/requests/ocdownloaderaddrequest.h \
+    source/cpp/rest/requests/ocdownloaderversionrequest.h \
     source/cpp/rest/settings.h \
     source/cpp/misc/uid.h \
     source/cpp/executiontarget.h \
@@ -103,6 +107,12 @@ windows{
     SOURCES += source/cpp/misc/windows/keychain.cpp
 }
 
+linux{
+    HEADERS += source/cpp/misc/linux/keychain.h
+
+    SOURCES += source/cpp/misc/linux/keychain.cpp
+}
+
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
         $$PWD/ext/libraries/android/openssl/openssl1.0.2q/libcrypto.so \
@@ -119,8 +129,4 @@ DISTFILES += \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
     android/gradlew.bat \
-    source/qml/items/LoginItem.qml \
-    source/qml/items/CameraItem.qml \
-    source/qml/items/CameraItem.qml \
-    source/qml/items/CameraItem.qml \
-    source/qml/screens/SetupScreen.qml
+    source/qml/items/LoginItem.qml
