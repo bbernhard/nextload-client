@@ -20,5 +20,8 @@
         <file>source/qml/screens/DownloadScreen.qml</file>
         <file>source/fonts/Elianto-Regular.ttf</file>
         <file>source/qml/screens/SelectBackendScreen.qml</file>
+        <file>source/qml/items/DownloadItem.qml</file>
+        <file>source/qml/items/ProgressItem.qml</file>
+        <file>source/qml/basiccomponents/HorizontalSeparator.qml</file>
     </qresource>
 </RCC>

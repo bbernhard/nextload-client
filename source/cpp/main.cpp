@@ -17,7 +17,10 @@ int main(int argc, char *argv[])
     const QString applicationVersion = "1.0.0";
     const QString g_uri = "com." + applicationName + "." + applicationName;
 
-    QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    //High dpi scaling doesn't work, see: https://bugreports.qt.io/browse/QTBUG-53247
+    //(issue still exists, even in Qt 5.12.3)
+    //QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+
     QGuiApplication app(argc, argv);
 
     QQuickStyle::setStyle("Material");
@@ -59,22 +62,19 @@ int main(int argc, char *argv[])
     //ocDownloader
     qmlRegisterType<OcDownloaderVersionRequest>(g_uri.toStdString().c_str(), 1, 0, "OcDownloaderVersionRequest");
     qmlRegisterType<OcDownloaderAddRequest>(g_uri.toStdString().c_str(), 1, 0, "OcDownloaderAddRequest");
+    qmlRegisterType<OcDownloaderListRequest>(g_uri.toStdString().c_str(), 1, 0, "OcDownloaderListRequest");
 
     //register the different implementations, depending on the platform
-#ifdef Q_OS_IOS
+#if defined(Q_OS_IOS)
     qmlRegisterType<ios::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
-#endif
-#ifdef Q_OS_OSX
+#elif defined(Q_OS_OSX)
     qmlRegisterType<osx::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
-#endif
-#ifdef Q_OS_WIN
+#elif defined(Q_OS_WIN)
     qmlRegisterType<windows::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
-#endif
-#ifdef Q_OS_LINUX
-    qmlRegisterType<linux1::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
-#endif
-#ifdef Q_OS_ANDROID
+#elif defined(Q_OS_ANDROID)
     qmlRegisterType<android::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
+#elif defined(Q_OS_LINUX)
+    qmlRegisterType<linux1::KeyChain>(g_uri.toStdString().c_str(), 1, 0, "Keychain");
 #endif
 
 

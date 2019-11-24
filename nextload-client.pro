@@ -22,6 +22,7 @@ CONFIG += qtquickcompiler
 SOURCES += \
     source/cpp/main.cpp \
     source/cpp/rest/httpsrequestworker.cpp \
+    source/cpp/rest/requests/ocdowloaderlistrequest.cpp \
     source/cpp/rest/requests/ocdownloaderaddrequest.cpp \
     source/cpp/rest/requests/ocdownloaderversionrequest.cpp \
     source/cpp/rest/settings.cpp \
@@ -60,6 +61,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     source/cpp/rest/httpsrequestworker.h \
     source/cpp/rest/requests/ocdownloaderaddrequest.h \
+    source/cpp/rest/requests/ocdownloaderlistrequest.h \
     source/cpp/rest/requests/ocdownloaderversionrequest.h \
     source/cpp/rest/settings.h \
     source/cpp/misc/uid.h \
