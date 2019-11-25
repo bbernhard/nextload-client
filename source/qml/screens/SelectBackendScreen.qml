@@ -50,7 +50,7 @@ BlankScreen {
     ColumnLayout {
         id: formats
         anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: parent.width/2.5
+        anchors.horizontalCenterOffset: parent.width/2.7
         anchors.top: selectBackendText.bottom
         anchors.topMargin: 10 * settings.pixelDensity
         width: parent.width
@@ -62,7 +62,7 @@ BlankScreen {
             text: qsTr("nextload-core")
             Material.theme: Material.Dark
             Material.accent: "#eb9486"
-            font.pixelSize: 4 * settings.pixelDensity
+            font.pixelSize: 6 * settings.pixelDensity
         }
 
         RadioButton {
@@ -71,7 +71,7 @@ BlankScreen {
             enabled: true
             Material.theme: Material.Dark
             Material.accent: "#eb9486"
-            font.pixelSize: 4 * settings.pixelDensity
+            font.pixelSize: 6 * settings.pixelDensity
         }
     }
 

@@ -68,9 +68,11 @@ BlankScreen {
         width: parent.width
         TabButton {
             text: qsTr("Download")
+            font.pixelSize: 6 * settings.pixelDensity
         }
         TabButton {
             text: qsTr("Progress")
+            font.pixelSize: 6 * settings.pixelDensity
         }
     }
 
