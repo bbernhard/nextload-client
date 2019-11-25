@@ -4,3 +4,4 @@ android/gradle.properties
 android/gradle.properties~
 android/local.properties
 android/local.properties~
+env/docker/build-openssl/output

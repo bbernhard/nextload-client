@@ -1,25 +1,71 @@
 #!/bin/bash
 
-export NDK=/tmp/android-ndk-${NDK_VERSION}/
-$NDK/build/tools/make-standalone-toolchain.sh --platform=android-9 --toolchain=arm-linux-androideabi-4.9 --install-dir=`pwd`/android-toolchain-arm
-export TOOLCHAIN_PATH=`pwd`/android-toolchain-arm/bin
-export TOOL=arm-linux-androideabi
-export NDK_TOOLCHAIN_BASENAME=${TOOLCHAIN_PATH}/${TOOL}
-export CC=$NDK_TOOLCHAIN_BASENAME-gcc
-export CXX=$NDK_TOOLCHAIN_BASENAME-g++
-export LINK=${CXX}
-export LD=$NDK_TOOLCHAIN_BASENAME-ld
-export AR=$NDK_TOOLCHAIN_BASENAME-ar
-export RANLIB=$NDK_TOOLCHAIN_BASENAME-ranlib
-export STRIP=$NDK_TOOLCHAIN_BASENAME-strip
-export ARCH_FLAGS="-march=armv7-a -mfloat-abi=softfp -mfpu=vfpv3-d16"
-export ARCH_LINK="-march=armv7-a -Wl,--fix-cortex-a8"
-export CPPFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 "
-export CXXFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 -frtti -fexceptions "
-export CFLAGS=" ${ARCH_FLAGS} -fpic -ffunction-sections -funwind-tables -fstack-protector -fno-strict-aliasing -finline-limit=64 "
-export LDFLAGS=" ${ARCH_LINK} "
+VERSION=$OPENSSL_VERSION
+export ANDROID_API=android-21
 
-cd /tmp/openssl-${OPENSSL_VERSION} && ./Configure android-armv7 --prefix=/tmp/openssl-${OPENSSL_VERSION}/build -fPIC -shared
+if [ ! -f "openssl-$VERSION.tar.gz" ]; then
+    wget https://www.openssl.org/source/openssl-$VERSION.tar.gz
+fi
 
-make
-make install
+for arch in "x86" "aarch64" "arm"
+do
+    rm -fr $arch
+    mkdir $arch
+    rm -fr openssl-$VERSION
+    tar xfa openssl-$VERSION.tar.gz
+    cd openssl-$VERSION
+
+    case $arch in
+        arm)
+            export ANDROID_PLATFORM=arch-arm
+            export ANDROID_EABI="arm-linux-androideabi-4.9"
+            export CROSS_COMPILE="arm-linux-androideabi-"
+            CONF_PARAM=android
+            ;;
+        aarch64)
+            export ANDROID_PLATFORM=arch-arm64
+            export ANDROID_EABI="aarch64-linux-android-4.9"
+            export CROSS_COMPILE="aarch64-linux-android-"
+            CONF_PARAM=android
+            ;;
+        x86)
+            export ANDROID_PLATFORM=arch-x86
+            export ANDROID_EABI="x86-4.9"
+            export CROSS_COMPILE="i686-linux-android-"
+            CONF_PARAM=android-x86
+            ;;
+#         x86_64)
+#             export ANDROID_EABI="x86_64-4.9"
+#             export ANDROID_ARCH=arch-x86_64
+#             export ARCH=x86_64
+#             export CROSS_COMPILE=x86_64-linux-android-
+#             CONF_PARAM="linux-generic64 no-asm -m64 -no-ssl2 -no-ssl3 -no-comp -no-hw --cross-compile-prefix=$CROSS_COMPILE"
+#             ;;
+    esac
+    export SYSTEM=android
+    export ANDROID_SYSROOT=$ANDROID_NDK_ROOT/platforms/$ANDROID_API/$ANDROID_PLATFORM
+    export ANDROID_DEV=$ANDROID_SYSROOT/usr
+    export CFLAGS="--sysroot=$ANDROID_SYSROOT"
+    export CPPFLAGS="--sysroot=$ANDROID_SYSROOT"
+    export CXXFLAGS="--sysroot=$ANDROID_SYSROOT"
+
+    ANDROID_TOOLCHAIN=""
+    for host in "linux-x86_64" "linux-x86" "darwin-x86_64" "darwin-x86"
+    do
+        if [ -d "$ANDROID_NDK_ROOT/toolchains/$ANDROID_EABI/prebuilt/$host/bin" ]; then
+            ANDROID_TOOLCHAIN="$ANDROID_NDK_ROOT/toolchains/$ANDROID_EABI/prebuilt/$host/bin"
+            break
+        fi
+    done
+
+    export PATH="$ANDROID_TOOLCHAIN":"$PATH"
+
+    ./Configure shared $CONF_PARAM || exit 1
+    make depend
+    make -j$(nproc) CALC_VERSIONS="SHLIB_COMPAT=; SHLIB_SOVER=" build_libs || exit 1
+    ${CROSS_COMPILE}strip -s libcrypto.so
+    ${CROSS_COMPILE}strip -s libssl.so
+    cp libcrypto.so ../$arch
+    cp libssl.so ../$arch
+    cd ..
+done
