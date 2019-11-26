@@ -54,7 +54,10 @@ BlankItem {
                     else
                         populate(jsonRes["QUEUE"]);
                 } else {
-                    toast.show(qsTr("Unknown error"));
+                    if("message" in jsonRes)
+                        toast.show(jsonRes["message"]);
+                    else
+                        toast.show(qsTr("Unknown error"));
                 }
             } else {
                 console.log("invalid backend");

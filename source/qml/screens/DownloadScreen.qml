@@ -45,11 +45,22 @@ BlankScreen {
         y: header.y + header.height
         x: parent.width - menu.width
         Material.theme: Material.Dark
+        width: { //set width to the menus largest item width
+                var result = 0;
+                var padding = 0;
+                for (var i = 0; i < count; ++i) {
+                    var item = itemAt(i);
+                    result = Math.max(item.contentItem.implicitWidth, result);
+                    padding = Math.max(item.padding, padding);
+                }
+                return result + padding * 2;
+        }
+        height: 14 * settings.pixelDensity
 
         MenuItem {
-            text: "Disconnect"
+            text: qsTr("Disconnect")
             Material.theme: Material.Dark
-            font.pixelSize: 6 * settings.pixelDensity
+            font.pixelSize: 7 * settings.pixelDensity
 
             onClicked: {
                 settings.token = "";
@@ -70,9 +81,14 @@ BlankScreen {
             text: qsTr("Download")
             font.pixelSize: 6 * settings.pixelDensity
         }
-        TabButton {
-            text: qsTr("Progress")
-            font.pixelSize: 6 * settings.pixelDensity
+        Component.onCompleted: {
+            if(settings.backend !== "nextload-core") {
+                var item = Qt.createQmlObject('import QtQuick.Controls 2.5; TabButton{}',
+                                                              tabBar);
+                item.text = qsTr("Progress");
+                item.font.pixelSize = 6 * settings.pixelDensity;
+                tabBar.addItem(item);
+            }
         }
     }
 

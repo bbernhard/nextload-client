@@ -6,6 +6,7 @@ import "../basiccomponents"
 
 BlankScreen {
     id: setupScreen
+    objectName: "SetupScreen"
     property string selectedBackend: "";
     signal connectSuccessful();
 
@@ -58,6 +59,7 @@ BlankScreen {
                 if(testConnectionSuccessful) {
                     settings.token = nextcloudToken.text;
                     settingsStorage.backend = setupScreen.selectedBackend;
+                    settings.backend = settingsStorage.backend;
                     settingsStorage.url = nextcloudUrl.text;
                     loadingIndicator.visible = false;
                     setupScreen.connectSuccessful();

@@ -60,6 +60,20 @@ ApplicationWindow {
             if(currentItem !== null)
                 currentItem.isActive()
         }
+
+        Keys.onReleased: {
+            if(Qt.platform.os === "android"){
+                if (event.key === Qt.Key_Back && stackView.depth > 0) {
+                    if(stackView.currentItem.objectName === "SetupScreen") {
+                        event.accepted = true;
+                        stackView.replace(Qt.resolvedUrl("qrc:/source/qml/screens/SelectBackendScreen.qml"));
+                    }
+                }
+            }
+        }
+        //forward every key press to the current
+        //active item in the stackview
+        Keys.forwardTo: stackView.currentItem
     }
 
     QtObject {

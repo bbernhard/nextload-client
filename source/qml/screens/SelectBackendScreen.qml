@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.12
 
 BlankScreen {
     id: selectBackendScreen
+    objectName: "SelectBackendScreen"
 
     Rectangle {
         anchors.fill: parent
@@ -43,41 +44,57 @@ BlankScreen {
 
     ButtonGroup {
         id: checkboxes
-        buttons: formats.children
     }
 
 
-    ColumnLayout {
-        id: formats
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.horizontalCenterOffset: parent.width/2.7
+    RadioButton {
+        id: nextloadCoreRadioButton
+        property string backend: "nextload-core";
+        checked: true
+        text: qsTr("nextload-core")
+        Material.theme: Material.Dark
+        Material.accent: "#eb9486"
+        font.pixelSize: 6 * settings.pixelDensity
         anchors.top: selectBackendText.bottom
         anchors.topMargin: 10 * settings.pixelDensity
-        width: parent.width
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.horizontalCenterOffset: -5 * settings.pixelDensity
 
-
-        RadioButton {
-            property string backend: "nextload-core";
-            checked: true
-            text: qsTr("nextload-core")
-            Material.theme: Material.Dark
-            Material.accent: "#eb9486"
-            font.pixelSize: 6 * settings.pixelDensity
+        Component.onCompleted: {
+            indicator.children[0].width = 4 * settings.pixelDensity;
+            indicator.children[0].height = 4 * settings.pixelDensity;
         }
+        indicator.implicitHeight: 7 * settings.pixelDensity
+        indicator.implicitWidth: 7 * settings.pixelDensity
+        spacing: 3 * settings.pixelDensity
+        ButtonGroup.group: checkboxes
+    }
 
-        RadioButton {
-            property string backend: "ocDownloader";
-            text: qsTr("ocDownloader")
-            enabled: true
-            Material.theme: Material.Dark
-            Material.accent: "#eb9486"
-            font.pixelSize: 6 * settings.pixelDensity
+    RadioButton {
+        id: ocDownloaderRadioButton
+        property string backend: "ocDownloader";
+        text: qsTr("ocDownloader")
+        enabled: true
+        Material.theme: Material.Dark
+        Material.accent: "#eb9486"
+        font.pixelSize: 6 * settings.pixelDensity
+        anchors.top: nextloadCoreRadioButton.bottom
+        anchors.left: nextloadCoreRadioButton.left
+
+
+        Component.onCompleted: {
+            indicator.children[0].width = 4 * settings.pixelDensity;
+            indicator.children[0].height = 4 * settings.pixelDensity;
         }
+        indicator.implicitHeight: 7 * settings.pixelDensity
+        indicator.implicitWidth: 7 * settings.pixelDensity
+        spacing: 3 * settings.pixelDensity
+        ButtonGroup.group: checkboxes
     }
 
     Button {
         id: doneButton
-        anchors.top: formats.bottom
+        anchors.top: ocDownloaderRadioButton.bottom
         anchors.topMargin: 20 * settings.pixelDensity
         anchors.left: parent.left
         anchors.right: parent.right
