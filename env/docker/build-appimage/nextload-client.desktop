@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Nextload Client
+Comment=Nextload Client
+Exec=nextload-client
+Icon=logo
+Categories=Office;
