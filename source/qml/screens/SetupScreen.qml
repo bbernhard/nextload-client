@@ -71,6 +71,7 @@ BlankScreen {
                 }
             } else {
                 toast.show(qsTr("Couldn't connect, please check URL and token"));
+                loadingIndicator.visible = false;
             }
         }
     }

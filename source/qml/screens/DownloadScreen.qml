@@ -55,7 +55,7 @@ BlankScreen {
                 }
                 return result + padding * 2;
         }
-        height: 14 * settings.pixelDensity
+        height: 18 * settings.pixelDensity
 
         MenuItem {
             text: qsTr("Disconnect")

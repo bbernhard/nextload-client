@@ -1,8 +1,8 @@
 #include "httpsrequestworker.h"
 #include <QTimer>
 
-const quint32 g_retryInterval = 3; //in seconds
-const quint32 g_maxRetries = 10;
+const quint32 g_retryInterval = 2; //in seconds
+const quint32 g_maxRetries = 3;
 
 HttpsRequestWorker::HttpsRequestWorker(QObject* parent)
     : QObject(parent),
