@@ -71,12 +71,24 @@ BlankScreen {
         }
     }
 
+    Timer {
+        id: refreshTimer
+        interval: 5000
+        running: true
+        repeat: true
+        onTriggered: {
+            if(tabBar.currentIndex === 1)
+                swipeView.itemAt(swipeView.currentIndex).loadData(false);
+        }
+    }
+
     TabBar {
         id: tabBar
         anchors.top: header.bottom
         Material.background: "#f3de8a"
         Material.accent: "#eb9486"
         width: parent.width
+        currentIndex: swipeView.currentIndex
         TabButton {
             text: qsTr("Download")
             font.pixelSize: 6 * settings.pixelDensity
@@ -92,8 +104,8 @@ BlankScreen {
         }
     }
 
-    StackLayout {
-        id: stackLayout
+    SwipeView {
+        id: swipeView
         anchors.top: tabBar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
@@ -109,7 +121,7 @@ BlankScreen {
         }
 
         onCurrentIndexChanged: {
-            stackLayout.itemAt(currentIndex).isActive();
+            swipeView.itemAt(currentIndex).isActive();
         }
     }
 }

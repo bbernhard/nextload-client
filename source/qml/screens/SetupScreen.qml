@@ -45,11 +45,16 @@ BlankScreen {
                         toast.show(qsTr("Couldn't connect, please make sure ocDownloader is installed and enabled!"));
                         loadingIndicator.visible = false;
                     } else {
-                        var jsonRes = JSON.parse(result);
-                        if ("RESULT" in jsonRes && jsonRes["RESULT"]) {
-                            testConnectionSuccessful = true;
-                        }
-                        else {
+                        try {
+                            var jsonRes = JSON.parse(result);
+                            if ("RESULT" in jsonRes && jsonRes["RESULT"]) {
+                                testConnectionSuccessful = true;
+                            }
+                            else {
+                                toast.show(qsTr("Couldn't connect, please make sure ocDownloader is installed and enabled!"));
+                                loadingIndicator.visible = false;
+                            }
+                        } catch(error) {
                             toast.show(qsTr("Couldn't connect, please make sure ocDownloader is installed and enabled!"));
                             loadingIndicator.visible = false;
                         }

@@ -92,8 +92,19 @@ BlankItem {
     }
 
     Rectangle {
+        id: background
         anchors.fill: parent
         color: "#272838"
+    }
+
+
+    Menu {
+        id: contextMenu
+        MenuItem {
+            text: qsTr("&Paste")
+            enabled: downloadUrl.canPaste
+            onTriggered: downloadUrl.paste()
+        }
     }
 
     TextField {
@@ -106,11 +117,23 @@ BlankItem {
         font.pixelSize: 6 * settings.pixelDensity
         width: parent.width - 20 * settings.pixelDensity
         horizontalAlignment: Text.AlignHCenter
+        selectByMouse: true
         onTextEdited: {
             if(downloadUrl.text === "")
                 downloadButton.enabled = false;
             else
                 downloadButton.enabled = true;
+        }
+
+        MouseArea {
+            anchors.fill: parent
+            acceptedButtons: Qt.RightButton
+            onClicked: {
+                var g = mapToGlobal(mouse.x, mouse.y);
+                contextMenu.x = background.width/2;
+                contextMenu.y = g.y - header.height - tabBar.height;
+                contextMenu.open()
+            }
         }
     }
 

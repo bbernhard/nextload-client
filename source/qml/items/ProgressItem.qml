@@ -8,11 +8,15 @@ import "../basiccomponents"
 BlankItem {
     HttpsRequestWorkerThread {
         id: restAPI
-        signal listTasks();
+        signal listTasks(var showLoadingIndicator);
 
         onListTasks: {
             ConnectionSettings.setBaseUrl(settings.url);
-            loadingIndicator.visible = true;
+
+            if(showLoadingIndicator)
+                loadingIndicator.visible = true;
+
+
             listTasksModel.clear();
 
 
@@ -65,8 +69,12 @@ BlankItem {
         }
     }
 
+    function loadData(showLoadingIndicator) {
+        restAPI.listTasks(showLoadingIndicator);
+    }
+
     onIsActive: {
-        restAPI.listTasks();
+        loadData(true);
     }
 
     Rectangle {

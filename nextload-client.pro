@@ -122,14 +122,14 @@ linux:!android{
 
 contains(ANDROID_TARGET_ARCH,armeabi-v7a) {
     ANDROID_EXTRA_LIBS = \
-        $$PWD/ext/libraries/android/openssl/openssl1.0.2t/armeabi-v7a/libcrypto.so \
-        $$PWD/ext/libraries/android/openssl/openssl1.0.2t/armeabi-v7a/libssl.so
+        $$PWD/ext/libraries/android/openssl/openssl1.1.1b/armeabi-v7a/libcrypto_1_1.so \
+        $$PWD/ext/libraries/android/openssl/openssl1.1.1b/armeabi-v7a/libssl_1_1.so
 }
 
 contains(ANDROID_TARGET_ARCH,arm64-v8a) {
     ANDROID_EXTRA_LIBS = \
-        $$PWD/ext/libraries/android/openssl/openssl1.0.2t/aarch64/libcrypto.so \
-        $$PWD/ext/libraries/android/openssl/openssl1.0.2t/aarch64/libssl.so
+        $$PWD/ext/libraries/android/openssl/openssl1.1.1b/aarch64/libcrypto_1_1.so \
+        $$PWD/ext/libraries/android/openssl/openssl1.1.1b/aarch64/libssl_1_1.so
 }
 
 DISTFILES += \
